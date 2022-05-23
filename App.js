@@ -27,14 +27,30 @@ export default function App() {
   const changeCounts = (amount, index) => {
     const newState = [...countables];
     newState[index].count += amount;
-    setCountables(newState);
+    //set state and index back to 0 to disable negative values
+    if (newState[index].count < 0) {
+      newState[index].count = 0;
+      console.log("No negative values allowed!");
+      setCountables(newState);
+      saveCountables(newState);
+    } else setCountables(newState);
     saveCountables(newState);
   };
 
   const addNewCountable = (name) => {
-    const newState = [...countables, { name, count: 0 }];
-    setCountables(newState);
-    saveCountables(newState);
+    //if find() returns true, it means we already have a countable of that name
+    const search = countables.find((values) => values.name === name);
+    if (search) {
+      console.log("No duplicate counters allowed!");
+      return null;
+    } else if (name === "") {
+      //no empty strings allowed
+      console.log("You need to name your countable!");
+    } else {
+      const newState = [...countables, { name, count: 0 }];
+      setCountables(newState);
+      saveCountables(newState);
+    }
   };
 
   // https://medium.com/@nickyang0501/keyboardavoidingview-not-working-properly-c413c0a200d4
